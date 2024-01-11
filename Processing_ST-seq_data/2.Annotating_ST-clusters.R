@@ -5,6 +5,17 @@ library(patchwork)
 library(dplyr)
 library(ggrepel)
 pair11 <- c('#E64B35','#4DBBD5','#00A087','#3C5488','#8491B4','#DCDDDD','#F39B7F','#91D1C2','#0099B4','#FEB500','#7E6148','#EF7000','#643C90')
+temp <- read.csv("F://data_for_upload/ST-seq/ST-seq_chip_info/ST-seq_meta_info.txt", sep = '\t', header = F)
+temp <- temp$V1
+for (i in temp) {
+  sce2 <- Seurat::Load10X_Spatial(paste0(i,"/outs/"),filter.matrix = F)
+  sce2$ID <- i
+  sce2 <- subset(sce2, subset = nFeature_Spatial>400)
+  sce2 <- SCTransform(sce2, assay = "Spatial", verbose = FALSE)
+  sce2 <- RunPCA(sce2, assay = "SCT", verbose = FALSE, npcs = 60)
+  sce2 <- FindNeighbors(sce2, reduction = "pca", dims = 1:30)
+  saveRDS(sce2, paste0(i,'.RDS'))
+}
 HD30K <- readRDS('201132A_HD30K.RDS')
 HD30K$donor <- 'HD30'
 HD30X <- readRDS('201132A_HD30X.RDS')
