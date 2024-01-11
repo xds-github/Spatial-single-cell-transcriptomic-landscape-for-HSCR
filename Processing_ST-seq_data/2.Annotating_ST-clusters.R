@@ -100,7 +100,7 @@ ST_merge <- set_celltype(ST_merge, new.cluster.ids = c("HG","HA","HA","HG","HA",
 ST_merge$celltype <- factor_order_change(c('CT','HG','HA'), ST_merge$celltype)
 ST_merge$group <- ST_merge$celltype
 ST_merge$celltype <- NULL
-saveRDS(ST_merge, 'J:/ST-analysis/total_merge2.RDS')
+saveRDS(ST_merge, 'ST-total_merge.RDS')
 #------------------------------------------------ Plot marker genes ------------------------------------------------------------
 avexpress_RNA <- AverageExpression(ST_merge)
 gene_list <- c('EPCAM','BEST4','ZG16','ACHE','SLC26A3',
