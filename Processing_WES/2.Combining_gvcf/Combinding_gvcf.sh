@@ -30,3 +30,5 @@ for i in ${gvcf_file}
 do
 echo "--variant ${vcf_output}${i} \\" >> ${vcf_output}merge_gvcf.slurm
 done
+cat ${vcf_output}Combining_gvcf.slurm >> ${vcf_output}merge_gvcf.slurm
+sbatch ${vcf_output}merge_gvcf.slurm
