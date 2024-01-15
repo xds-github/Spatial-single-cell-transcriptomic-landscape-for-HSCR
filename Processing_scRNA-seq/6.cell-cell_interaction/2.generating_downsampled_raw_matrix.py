@@ -18,3 +18,6 @@ adata = adata[adata.obs['barcode'].isin(meta_data['barcode']), :]
 adata.obs = pd.merge(adata.obs, meta_data, on = 'barcode')
 adata.obs.rename(index=adata.obs['barcode'],inplace=True)
 adata.obs = adata.obs.drop('barcode', axis=1)
+import h5py
+mat=pd.DataFrame(data=adata.X.todense(),index=adata.obs_names,columns=adata.var_names)
+mat.to_hdf("/share/home/xudeshu/scanpy_dic/HSCR/final_anan/subset_total_500_rawt.h5","mat")
