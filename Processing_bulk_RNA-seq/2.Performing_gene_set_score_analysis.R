@@ -20,7 +20,7 @@ factor_order_change <- function(new_order, old_factor){
   return(new_factor)
 }
 # ----------------------- Read in matrix -----------------------------------
-meta_data <- read.csv('E:/megacolon/Bulk-RNAseq/star_out_220429/sample_info_4.csv',check.names = F)
+meta_data <- read.csv('Bulk_RNA-seq_info.csv',check.names = F)
 count_matrix <- read.table(paste0('E:/megacolon/Bulk-RNAseq/star_out_220429/','20109903X','_star_out.txt'))
 count_matrix$V2 <- count_matrix$V3 <- NULL
 for (i in sample_N) {
