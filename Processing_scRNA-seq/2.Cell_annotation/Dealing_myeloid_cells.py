@@ -106,3 +106,6 @@ marker_genes = ['CD14','IL1B','S100A8','S100A9','LYVE1','C1QA','C1QB','MRC1','CD
 #sc.pl.dotplot(adata, marker_genes, groupby='celltype', cmap='YlGnBu_r',save='T_marker.pdf')
 sc.pl.dotplot(adata, marker_genes, groupby='celltype', cmap='YlGnBu_r')
 adata.write('/share/home/xudeshu/scanpy_dic/HSCR/final_anan/h5ad_file/Myeloid_processed.h5ad')
+adata.obs['barcode'] = adata.obs._stat_axis.values.tolist()
+meta_data =adata.obs
+meta_data[['barcode','celltype']].to_csv( "/share/home/xudeshu/todense/HSCR/final_anan/meta_file/Myeloid_meta_data.csv", sep=',')
