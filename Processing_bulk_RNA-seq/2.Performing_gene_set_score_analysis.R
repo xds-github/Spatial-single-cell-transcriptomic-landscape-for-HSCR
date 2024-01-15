@@ -44,7 +44,7 @@ for (i in dup_list) {
 refer_gene_list$`Gene_name2` <- NULL
 count_matrix <- count_matrix[refer_gene_list$`Gene stable ID`,]
 rownames(count_matrix) <- refer_gene_list$`Gene name`
-#saveRDS(count_matrix, 'E:/megacolon/Bulk-RNAseq/star_out_220429/total_raw_count_matrix_8.RDS')
+saveRDS(count_matrix, 'E:/megacolon/Bulk-RNAseq/star_out_220429/total_raw_count_matrix.RDS')
 # ----------------------- Generating sce object ----------------------------------
 sce <- CreateSeuratObject(counts = count_matrix)
 sce$group <- meta_data$group
@@ -83,10 +83,10 @@ temp %>% mutate(segment = factor(segment, levels = c('CT','HG','HA'))) %>%
         panel.border = element_rect(colour = 'black',fill = NA))
 #saveRDS(sce, "E:/megacolon/Bulk-RNAseq/rmats-analysis/total_merge8.RDS")
 # Acquire CPM matrix
-count_matrix <- readRDS('E:/megacolon/Bulk-RNAseq/star_out_220429/total_raw_count_matrix_7.RDS')
+count_matrix <- readRDS('E:/megacolon/Bulk-RNAseq/star_out_220429/total_raw_count_matrix.RDS')
 count_matrix <- count_matrix[rowSums(count_matrix)>0,]
 CPM_matrix <- cpm(count_matrix)
 gene <- rownames(CPM_matrix)
 CPM_matrix <- cbind(gene, CPM_matrix)
-saveRDS(CPM_matrix, 'E:/megacolon/Bulk-RNAseq/star_out_220429/CPM_count_matrix_7.RDS')
-write.table(CPM_matrix, 'E:/megacolon/Bulk-RNAseq/star_out_220429/CPM_count_matrix_7.txt', sep = '\t', quote = F, row.names = F)
+saveRDS(CPM_matrix, 'E:/megacolon/Bulk-RNAseq/star_out_220429/CPM_count_matrix.RDS')
+write.table(CPM_matrix, 'E:/megacolon/Bulk-RNAseq/star_out_220429/CPM_count_matrix.txt', sep = '\t', quote = F, row.names = F)
