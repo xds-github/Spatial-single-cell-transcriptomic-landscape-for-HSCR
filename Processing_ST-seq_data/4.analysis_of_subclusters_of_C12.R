@@ -1,0 +1,48 @@
+#library(SPATA2)
+library(Seurat)
+library(ggplot2)
+library(patchwork)
+library(dplyr)
+library(ggrepel)
+library(future)
+library(pheatmap)
+ST_merge <- readRDS("J:/ST-analysis/total_merge2.RDS")
+ST_merge_temp <- subset(ST_merge, subset = fun_cluster2=='C12')
+ST_merge_temp <- subset(ST_merge_temp, subset = group%in%c('CT','HG'))
+ST_merge_temp <- RunUMAP(ST_merge_temp, dims = 1:20)
+ST_merge_temp <- FindNeighbors(ST_merge_temp, dims = 1:20)
+ST_merge_temp <- FindClusters(ST_merge_temp, verbose = FALSE, resolution = 0.35)
+DimPlot(ST_merge_temp,label = T, pt.size = 2, cols = c("#a4c9db","#2073a9","#f19795"))
+DimPlot(ST_merge_temp, group.by = 'group')
+table(ST_merge_temp$seurat_clusters, ST_merge_temp$ID)
+FeaturePlot(ST_merge_temp, features = c("CFD",'NOS1'))
+Idents(ST_merge_temp) <- ST_merge_temp$seurat_clusters
+ST_merge_temp <- set_celltype(ST_merge_temp, new.cluster.ids = c('nMusc_ganglia','nMusc_ganglia','Submu_ganglia','Submu_ganglia','iMusc_ganglia'))
+ST_merge_temp$celltype <- factor_order_change(c('Submu_ganglia','nMusc_ganglia','iMusc_ganglia'), ST_merge_temp$celltype)
+Idents(ST_merge_temp) <- ST_merge_temp$celltype
+DimPlot(ST_merge_temp,label = T)
+table(ST_merge_temp$celltype, ST_merge_temp$ID)
+temp <- FindAllMarkers(ST_merge_temp)
+write.csv(temp, "J:/ST-analysis/markers_of_subneural.csv")
+temp <- FindMarkers(ST_merge_temp, ident.1 = 'iMusc_ganglia', ident.2 = 'nMusc_ganglia', logfc.threshold = 0)
+write.csv(temp, "J:/ST-analysis/subneur_mus2_v_1.csv")
+SpatialDimPlot(ST_merge_temp, crop = F, label = T, images = 'slice1.12', cols = c("#a4c9db","#2073a9","#f19795"), pt.size.factor = 1.1)
+SpatialDimPlot(ST_merge_temp, crop = F, label = T, images = 'slice1.17', cols = c("#a4c9db","#2073a9","#f19795"))
+DotPlot(ST_merge_temp, features = c('CFD','C3','COL1A1','FBLN1','MYH11','MALAT1','ACTG2','SLC30A1','MT1E','MT1X','MT2A','CCL2','IL1B','NFKBIA','TNF'),cols = 'RdBu') + RotatedAxis()
+#saveRDS(ST_merge_temp, 'J:/ST-analysis/Neu_sub_cluster.RDS')
+# apoptosis
+GO_DATA <- readRDS("D:/Linux_resource/GO_DATA.RDS")
+gene_list <- GO_DATA$PATHID2EXTID$'GO:0043525'#positive regulation of neuron apoptotic process
+gene_list <- list(gene_list)
+ST_merge <- AddModuleScore(ST_merge,features = gene_list,name = "apoptosis_score")
+VlnPlot(ST_merge, features = c('apoptosis_score1'))
+temp <- ST_merge@meta.data[,c('celltype','apoptosis_score1')]
+wilcox.test(temp[temp$celltype=='Neu_musc1','apoptosis_score1'],temp[temp$celltype=='Neu_musc2','apoptosis_score1'])
+# generation of neurons
+GO_DATA <- readRDS("D:/Linux_resource/GO_DATA.RDS")
+gene_list <- GO_DATA$PATHID2EXTID$'GO:0048699'
+gene_list <- list(gene_list)
+ST_merge <- AddModuleScore(ST_merge,features = gene_list,name = "neu_gener_score")
+VlnPlot(ST_merge, features = c('neu_gener_score1'))
+temp <- ST_merge@meta.data[,c('celltype','neu_gener_score1')]
+wilcox.test(temp[temp$celltype=='Neu_musc1','neu_gener_score1'],temp[temp$celltype=='Neu_musc2','neu_gener_score1'])
