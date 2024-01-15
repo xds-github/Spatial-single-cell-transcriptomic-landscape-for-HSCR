@@ -111,3 +111,11 @@ adata.write('/share/home/xudeshu/scanpy_dic/HSCR/final_anan/h5ad_file/Endo_peri_
 adata.obs['barcode'] = adata.obs._stat_axis.values.tolist()
 meta_data =adata.obs
 meta_data[['barcode','celltype','group','ID']].to_csv( "/share/home/xudeshu/scanpy_dic/HSCR/final_anan/meta_file/Endo_peri_meta_data.csv", sep=',')
+adata1 = sc.read('/share/home/xudeshu/scanpy_dic/HSCR/h5ad_out/raw_merge.h5ad')
+df_news = pd.read_csv("/share/home/xudeshu/scanpy_dic/HSCR/final_anan/meta_file/Endo_peri_meta_data.csv")
+adata1.obs['barcode'] = adata1.obs._stat_axis.values.tolist()
+adata1 = adata1[adata1.obs['barcode'].isin(df_news['barcode']), :]
+adata1.obs = adata1.obs.drop('barcode', axis=1)
+#adata = adata.raw.to_adata()
+mat=pd.DataFrame(data=adata1.X.todense(),index=adata1.obs_names,columns=adata1.var_names)
+mat.to_csv('/share/home/xudeshu/scanpy_dic/HSCR/final_anan/meta_file/Endo_peri_raw_matrix_230921.csv')
