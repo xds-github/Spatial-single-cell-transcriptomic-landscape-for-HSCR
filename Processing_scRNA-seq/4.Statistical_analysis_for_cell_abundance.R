@@ -1,3 +1,4 @@
+# This script was modified from  Gary Reynolds et al.'s work. Please cite Reynolds, G. et al. Developmental cell programs are co-opted in inflammatory skin disease. Science 371 (2021). 
 library(MASS)
 library(reshape2)
 count_matrix <- read.csv('/share/home/xudeshu/scanpy_dic/HSCR/final_anan/meta_file/total_meta_data2.csv')
